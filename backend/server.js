@@ -9,7 +9,7 @@ const app = express();
 const PORT = ENV_VARS.PORT;
 
 // middleware functions
-app.use(express.json()); // to parse json values from request
+app.use(express.json()); // to parse incoming requests with JSON payloads
 app.use(cookieParser()); // to read cookies from request headers 
 
 // routes for various utilities
