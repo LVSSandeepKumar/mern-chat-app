@@ -7,7 +7,7 @@ export const signup = async(req,res) => {
     try {
         //Check if the user has provided all the credentials and fetch them from request body
         const {fullName, username, password, confirmPassword, gender} = req.body;
-        if(!fullName && !username && !password && !confirmPassword && !gender) {
+        if(!(fullName && username && password && confirmPassword && gender)) {
             return res.status(400).json({ error: "Please provide all the credentials" });
         }
         //Check if the password is of desired length
@@ -47,6 +47,7 @@ export const signup = async(req,res) => {
             password: ""
         }});
     } catch (error) {
+        //Error handling
         console.log(`Error in signup controller, ${error.message}`);
         return res.status(500).json({ error: "Internal Server Error" });
     }
@@ -54,8 +55,30 @@ export const signup = async(req,res) => {
 
 export const login = async(req,res) => {
     try {
-        
+        //Check if user entered both password and username and read them from request body
+        const {username, password} = req.body;
+        if(!(username && password)) {
+            return res.status(400).json({ error: "Please provide both username and password" });
+        }
+        //Check if there is any user with that username
+        const user = await User.findOne({ username });
+        if(!user) {
+            return res.status(404).json({ error: "No user found, check the username or visit signup" });
+        }
+        //Check if the password is correct
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if(!isPasswordCorrect) {
+            return res.status(403).json({ error: "Incorrect password" });
+        }
+        //Generate token and set cookie for login session
+        generateTokenAndSetCookie(user._id, res);
+        //Return the user without password to frontend
+        return res.status(200).json({ user: {
+            ...user._doc,
+            password: ""
+        }});
     } catch (error) {
+        //Error handling
         console.log(`Error in login controller, ${error.message}`);
         return res.status(500).json({ error: "Internal Server Error" });
     }
