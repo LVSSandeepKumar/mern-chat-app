@@ -86,8 +86,11 @@ export const login = async(req,res) => {
 
 export const logout = async(req,res) => {
     try {
-        
+        //Clear the cookie and send response to client
+        res.clearCookie("jwt");
+        return res.status(200).json({ message: "Logout successful" });
     } catch (error) {
+        //Error handling
         console.log(`Error in logout controller, ${error.message}`);
         return res.status(500).json({ error: "Internal Server Error" });
     }
