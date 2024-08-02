@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 
 import User from "../models/user.model.js";
+import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 export const signup = async(req,res) => {
     try {
@@ -29,13 +30,15 @@ export const signup = async(req,res) => {
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
 		const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
         //Create new user
-        const newUser = await new User({
+        const newUser = new User({
             fullName,
             username,
             password: hashedPassword,
             gender,
             profilePic: gender === "male" ? boyProfilePic : girlProfilePic
         })
+        //Generate a token and set it to cookie
+        generateTokenAndSetCookie(newUser._id, res);
         //Save the new user to db
         await newUser.save();
         //Return the user without password to frontend
