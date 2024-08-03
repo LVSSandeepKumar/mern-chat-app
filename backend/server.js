@@ -6,6 +6,7 @@ import { connectDB } from "./utils/connectDB.js";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
+import userRoutes from "./routes/user.route.js";
 
 const app = express();
 const PORT = ENV_VARS.PORT;
@@ -15,8 +16,9 @@ app.use(express.json()); // to parse incoming requests with JSON payloads
 app.use(cookieParser()); // to read cookies from request headers 
 
 // routes for various utilities
-app.use("/api/auth", authRoutes); // authentication routes
+app.use("/api/auth", authRoutes);        // authentication routes
 app.use("/api/messages", messageRoutes); // message routes
+app.use("/api/users", userRoutes);       // user routes
 
 app.listen(PORT, () => {
     connectDB();
