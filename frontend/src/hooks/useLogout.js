@@ -10,7 +10,7 @@ const useLogout = () => {
   const logout = async () => {
     setLoading(true);
     try {
-      //Fetch data from API endpoint
+      //API request and response data
       const res = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
