@@ -30,7 +30,7 @@ export const sendMessage = async(req,res) => {
         //Save both conversation and message
         await Promise.all([conversation.save(), newMessage.save()]);
         //Return the message to frontend
-        return res.status(200).json({ newMessage });
+        return res.status(200).json(newMessage);
     } catch (error) {
         //Error handling
         console.log(`Error in sendMessage controller, ${error.message}`);
